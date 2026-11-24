@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+@theme {
+  --color-accent: #CDFA03;
+  --color-dark: #1C1C1C;
+  --color-white: #FFF;
+  --color-error: #EF4444;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+}
+
+@layer base {
+  body {
+    @apply bg-dark text-white;
+  }
+}
