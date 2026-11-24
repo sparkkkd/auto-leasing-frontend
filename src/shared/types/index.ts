@@ -1,18 +1,15 @@
 export type UserRole = 'ADMIN' | 'MANAGER' | 'VIEWER'
 
-export interface User {
-	id: string
-	email: string
-	name: string
-	role: UserRole
+export interface PaginatedResponse<T> {
+	data: T[]
+	total: number
+	page: number
+	limit: number
+	totalPages: number
 }
 
-export interface AuthResponse {
-	user: User
-	accessToken: string
-}
-
-export interface LoginRequest {
-	email: string
-	password: string
+export interface ApiError {
+	statusCode: number
+	message: string | string[]
+	error: string
 }
