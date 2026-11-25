@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { loginApi } from '@/entities/user/api'
 import { useAuth } from '@/hooks/useAuth'
 import { routes } from '@/shared/routes'
+import toast from 'react-hot-toast'
 
 const loginSchema = z.object({
 	email: z.string().email('Введите корректный email'),
@@ -39,12 +40,21 @@ export const LoginPage = () => {
 				'Login failed:',
 				error.response?.data?.message || error.message,
 			)
-			alert('Неверный email или пароль')
 		},
 	})
 
 	const onSubmit = (data: LoginFormData) => {
-		loginMutation.mutate(data)
+		toast.promise(
+			loginMutation.mutateAsync(data),
+			{
+				loading: 'Входим в систему...',
+				success: 'Добро пожаловать!',
+				error: (err: any) => {
+					return err?.response?.data?.message || 'Ошибка входа'
+				},
+			},
+			{ position: 'top-center' },
+		)
 	}
 
 	return (
