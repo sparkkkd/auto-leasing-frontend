@@ -6,6 +6,7 @@ import { z } from 'zod'
 
 import { loginApi } from '@/entities/user/api'
 import { useAuth } from '@/hooks/useAuth'
+import { getApiErrorMessage } from '@/shared/api/api-error'
 import { routes } from '@/shared/routes'
 import toast from 'react-hot-toast'
 
@@ -35,11 +36,8 @@ export const LoginPage = () => {
 			setAuth(user, accessToken)
 			navigate(routes.dashboard)
 		},
-		onError: (error: any) => {
-			console.error(
-				'Login failed:',
-				error.response?.data?.message || error.message,
-			)
+		onError: (error: unknown) => {
+			console.error('Login failed:', getApiErrorMessage(error))
 		},
 	})
 
@@ -49,9 +47,7 @@ export const LoginPage = () => {
 			{
 				loading: 'Входим в систему...',
 				success: 'Добро пожаловать!',
-				error: (err: any) => {
-					return err?.response?.data?.message || 'Ошибка входа'
-				},
+				error: getApiErrorMessage,
 			},
 			{ position: 'top-center' },
 		)
