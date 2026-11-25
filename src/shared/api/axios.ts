@@ -38,7 +38,10 @@ api.interceptors.response.use(
 			_retry?: boolean
 		}
 
-		const isAuthEndpoint = originalRequest.url?.startsWith('/auth/')
+		const authEndpoints = ['/auth/login', '/auth/refresh', '/auth/logout']
+		const isAuthEndpoint = authEndpoints.some((endpoint) =>
+			originalRequest.url?.includes(endpoint),
+		)
 
 		if (
 			error.response?.status === 401 &&

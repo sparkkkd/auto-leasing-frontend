@@ -10,7 +10,7 @@ export const loginApi = (data: LoginRequest) =>
 export const logoutApi = () => api.post('/auth/logout')
 
 export const refreshApi = () =>
-	api.post<{ accessToken: string }>('/auth/refresh')
+	api.post<{ accessToken: string; user: User }>('/auth/refresh')
 
 export const getMeApi = () => api.get<User>('/auth/me')
 
