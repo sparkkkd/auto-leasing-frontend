@@ -7,11 +7,14 @@ interface StatusMeta {
 }
 
 export const CAR_STATUS_MAP: Record<CarStatus, StatusMeta> = {
-	IN_STOCK: { label: 'В наличии', variant: 'success' },
+	IN_STOCK: { label: 'На складе', variant: 'success' },
 	IN_WORK: { label: 'В работе', variant: 'info' },
-	RESERVED: { label: 'Забронирован', variant: 'warning' },
-	SOLD: { label: 'Продан', variant: 'default' },
-	REPAIR: { label: 'В ремонте', variant: 'danger' },
+	RESERVED: { label: 'Зарезервирована', variant: 'warning' },
+	SOLD: { label: 'Продана', variant: 'default' },
+	REPAIR: { label: 'На ремонте', variant: 'danger' },
+	IN_PURCHASE: { label: 'В процессе покупки', variant: 'info' },
+	FOR_ISSUE: { label: 'Готова к выдаче', variant: 'info' },
+	SEIZED: { label: 'Изъята', variant: 'danger' },
 }
 
 /** Select options */

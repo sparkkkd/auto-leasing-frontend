@@ -11,6 +11,7 @@ export const DEAL_STATUS_MAP: Record<DealStatus, StatusMeta> = {
 	ACTIVE: { label: 'Активна', variant: 'info' },
 	COMPLETED: { label: 'Завершена', variant: 'success' },
 	CANCELLED: { label: 'Отменена', variant: 'danger' },
+	TERMINATED: { label: 'Расторгнута', variant: 'warning' },
 }
 
 /** Select options */

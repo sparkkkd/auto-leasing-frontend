@@ -1,21 +1,28 @@
 import api from '@/shared/api/axios'
 
 import type { PaginatedResponse } from '@/shared/types'
-import type { Client } from './types'
+import type {
+	ClientDetails,
+	ClientListItem,
+	ClientPaymentSchedules,
+	ClientsQueryParams,
+	CreateClientInput,
+	UpdateClientInput,
+} from './types'
 
-export const getClientsApi = (params?: {
-	page?: number
-	limit?: number
-	search?: string
-}) => api.get<PaginatedResponse<Client>>('/clients', { params })
+export const getClientsApi = (params?: ClientsQueryParams) =>
+	api.get<PaginatedResponse<ClientListItem>>('/clients', { params })
 
 export const getClientByIdApi = (id: string) =>
-	api.get<Client & { deals?: unknown[] }>(`/clients/${id}`) // TODO типизировать deals
+	api.get<ClientDetails>(`/clients/${id}`)
 
-export const createClientApi = (data: Partial<Client>) =>
-	api.post<Client>('/clients', data)
+export const createClientApi = (data: CreateClientInput) =>
+	api.post<ClientDetails>('/clients', data)
 
-export const updateClientApi = (id: string, data: Partial<Client>) =>
-	api.patch<Client>(`/clients/${id}`, data)
+export const updateClientApi = (id: string, data: UpdateClientInput) =>
+	api.patch<ClientDetails>(`/clients/${id}`, data)
 
 export const deleteClientApi = (id: string) => api.delete(`/clients/${id}`)
+
+export const getClientPaymentScheduleApi = (clientId: string) =>
+	api.get<ClientPaymentSchedules>(`/clients/${clientId}/payments/schedule`)

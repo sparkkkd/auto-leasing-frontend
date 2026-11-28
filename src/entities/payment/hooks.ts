@@ -8,16 +8,13 @@ import {
 	updatePaymentApi,
 } from './api'
 
-import type { Payment } from './types'
+import type {
+	CreatePaymentInput,
+	PaymentQueryParams,
+	UpdatePaymentInput,
+} from './types'
 
-export const usePayments = (params?: {
-	page?: number
-	limit?: number
-	dealId?: string
-	direction?: string
-	dateFrom?: string
-	dateTo?: string
-}) => {
+export const usePayments = (params?: PaymentQueryParams) => {
 	return useQuery({
 		queryKey: ['payments', params],
 		queryFn: () => getPaymentsApi(params).then((res) => res.data),
@@ -36,12 +33,10 @@ export const useCreatePayment = () => {
 	const queryClient = useQueryClient()
 
 	return useMutation({
-		mutationFn: createPaymentApi,
-		onSuccess: (_, variables) => {
+		mutationFn: (data: CreatePaymentInput) => createPaymentApi(data),
+		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['payments'] })
-			if (variables.dealId) {
-				queryClient.invalidateQueries({ queryKey: ['deal', variables.dealId] })
-			}
+			queryClient.invalidateQueries({ queryKey: ['deals'] })
 		},
 	})
 }
@@ -50,11 +45,12 @@ export const useUpdatePayment = () => {
 	const queryClient = useQueryClient()
 
 	return useMutation({
-		mutationFn: ({ id, data }: { id: string; data: Partial<Payment> }) =>
+		mutationFn: ({ id, data }: { id: string; data: UpdatePaymentInput }) =>
 			updatePaymentApi(id, data),
 		onSuccess: (_, { id }) => {
 			queryClient.invalidateQueries({ queryKey: ['payments'] })
 			queryClient.invalidateQueries({ queryKey: ['payment', id] })
+			queryClient.invalidateQueries({ queryKey: ['deals'] })
 		},
 	})
 }
@@ -66,6 +62,7 @@ export const useDeletePayment = () => {
 		mutationFn: deletePaymentApi,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['payments'] })
+			queryClient.invalidateQueries({ queryKey: ['deals'] })
 		},
 	})
 }

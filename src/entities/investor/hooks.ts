@@ -8,14 +8,9 @@ import {
 	updateInvestorApi,
 } from './api'
 
-import type { Investor } from './types'
+import type { InvestorQueryParams, UpdateInvestorInput } from './types'
 
-export const useInvestors = (params?: {
-	page?: number
-	limit?: number
-	search?: string
-	type?: string
-}) => {
+export const useInvestors = (params?: InvestorQueryParams) => {
 	return useQuery({
 		queryKey: ['investors', params],
 		queryFn: () => getInvestorsApi(params).then((res) => res.data),
@@ -45,7 +40,7 @@ export const useUpdateInvestor = () => {
 	const queryClient = useQueryClient()
 
 	return useMutation({
-		mutationFn: ({ id, data }: { id: string; data: Partial<Investor> }) =>
+		mutationFn: ({ id, data }: { id: string; data: UpdateInvestorInput }) =>
 			updateInvestorApi(id, data),
 		onSuccess: (_, { id }) => {
 			queryClient.invalidateQueries({ queryKey: ['investors'] })

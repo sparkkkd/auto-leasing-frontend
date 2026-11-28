@@ -4,17 +4,14 @@ import {
 	createClientApi,
 	deleteClientApi,
 	getClientByIdApi,
+	getClientPaymentScheduleApi,
 	getClientsApi,
 	updateClientApi,
 } from './api'
 
-import type { Client } from './types'
+import type { ClientsQueryParams, UpdateClientInput } from './types'
 
-export const useClients = (params?: {
-	page?: number
-	limit?: number
-	search?: string
-}) => {
+export const useClients = (params?: ClientsQueryParams) => {
 	return useQuery({
 		queryKey: ['clients', params],
 		queryFn: () => getClientsApi(params).then((res) => res.data),
@@ -44,7 +41,7 @@ export const useUpdateClient = () => {
 	const queryClient = useQueryClient()
 
 	return useMutation({
-		mutationFn: ({ id, data }: { id: string; data: Partial<Client> }) =>
+		mutationFn: ({ id, data }: { id: string; data: UpdateClientInput }) =>
 			updateClientApi(id, data),
 		onSuccess: (_, { id }) => {
 			queryClient.invalidateQueries({ queryKey: ['clients'] })
@@ -61,5 +58,14 @@ export const useDeleteClient = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['clients'] })
 		},
+	})
+}
+
+export const useClientPaymentSchedule = (clientId: string) => {
+	return useQuery({
+		queryKey: ['client-payment-schedule', clientId],
+		queryFn: () =>
+			getClientPaymentScheduleApi(clientId).then((res) => res.data),
+		enabled: !!clientId,
 	})
 }

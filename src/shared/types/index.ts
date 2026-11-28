@@ -1,5 +1,3 @@
-export type UserRole = 'ADMIN' | 'MANAGER' | 'VIEWER'
-
 export interface PaginatedResponse<T> {
 	data: T[]
 	total: number

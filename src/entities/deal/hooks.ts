@@ -5,19 +5,13 @@ import {
 	deleteDealApi,
 	getDealByIdApi,
 	getDealsApi,
+	getOverduePaymentsApi,
 	updateDealApi,
 } from './api'
 
-import type { Deal } from './types'
+import type { DealQueryParams, UpdateDealInput } from './types'
 
-export const useDeals = (params?: {
-	page?: number
-	limit?: number
-	search?: string
-	status?: string
-	clientId?: string
-	investorId?: string
-}) => {
+export const useDeals = (params?: DealQueryParams) => {
 	return useQuery({
 		queryKey: ['deals', params],
 		queryFn: () => getDealsApi(params).then((res) => res.data),
@@ -40,6 +34,7 @@ export const useCreateDeal = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['deals'] })
 			queryClient.invalidateQueries({ queryKey: ['cars'] })
+			queryClient.invalidateQueries({ queryKey: ['clients'] })
 		},
 	})
 }
@@ -48,12 +43,13 @@ export const useUpdateDeal = () => {
 	const queryClient = useQueryClient()
 
 	return useMutation({
-		mutationFn: ({ id, data }: { id: string; data: Partial<Deal> }) =>
+		mutationFn: ({ id, data }: { id: string; data: UpdateDealInput }) =>
 			updateDealApi(id, data),
 		onSuccess: (_, { id }) => {
 			queryClient.invalidateQueries({ queryKey: ['deals'] })
 			queryClient.invalidateQueries({ queryKey: ['deal', id] })
 			queryClient.invalidateQueries({ queryKey: ['cars'] })
+			queryClient.invalidateQueries({ queryKey: ['clients'] })
 		},
 	})
 }
@@ -66,6 +62,15 @@ export const useDeleteDeal = () => {
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['deals'] })
 			queryClient.invalidateQueries({ queryKey: ['cars'] })
+			queryClient.invalidateQueries({ queryKey: ['client'] })
 		},
+	})
+}
+
+export const useOverduePayments = () => {
+	return useQuery({
+		queryKey: ['overdue-payments'],
+		queryFn: () => getOverduePaymentsApi().then((res) => res.data),
+		refetchInterval: 10 * 60 * 1000,
 	})
 }
